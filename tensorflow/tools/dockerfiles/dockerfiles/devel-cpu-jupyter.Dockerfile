@@ -41,6 +41,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         openjdk-8-jdk \
         openjdk-8-jre-headless \
         && \
+    apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -65,7 +66,10 @@ ENV LANG C.UTF-8
 
 RUN apt-get update && apt-get install -y \
     ${PYTHON} \
-    ${PYTHON}-pip
+    ${PYTHON}-pip && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN ${PIP} --no-cache-dir install --upgrade \
     pip \
@@ -82,7 +86,10 @@ RUN apt-get update && apt-get install -y \
     openjdk-8-jdk \
     ${PYTHON}-dev \
     virtualenv \
-    swig
+    swig && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN ${PIP} --no-cache-dir install \
     Pillow \
@@ -119,7 +126,10 @@ RUN jupyter serverextension enable --py jupyter_http_over_ws
 
 RUN mkdir -p /tf/tensorflow-tutorials && chmod -R a+rwx /tf/
 RUN mkdir /.local && chmod a+rwx /.local
-RUN apt-get install -y --no-install-recommends wget
+RUN apt-get update && apt-get install -y --no-install-recommends wget && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 WORKDIR /tf/tensorflow-tutorials
 RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/classification.ipynb
 RUN wget https://raw.githubusercontent.com/tensorflow/docs/master/site/en/tutorials/keras/overfit_and_underfit.ipynb

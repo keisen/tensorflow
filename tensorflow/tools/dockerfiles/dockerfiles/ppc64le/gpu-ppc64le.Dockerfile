@@ -56,12 +56,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libzmq3-dev \
         pkg-config \
         software-properties-common \
-        unzip
+        unzip && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install TensorRT if not building for PowerPC
 RUN [[ "${ARCH}" = "ppc64le" ]] || { apt-get update && \
         apt-get install -y --no-install-recommends libnvinfer${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda${CUDA} \
         libnvinfer-plugin${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda${CUDA} \
+        && apt-get autoremove -y \
         && apt-get clean \
         && rm -rf /var/lib/apt/lists/*; }
 
@@ -85,7 +89,10 @@ ENV LANG C.UTF-8
 
 RUN apt-get update && apt-get install -y \
     ${PYTHON} \
-    ${PYTHON}-pip
+    ${PYTHON}-pip && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN ${PIP} --no-cache-dir install --upgrade \
     pip \
@@ -100,10 +107,14 @@ RUN ln -s $(which ${PYTHON}) /usr/local/bin/python
 #   tf-nightly
 #   tf-nightly-gpu
 ARG TF_PACKAGE=tensorflow
-RUN apt-get update && apt-get install -y curl libhdf5-dev wget
+RUN apt-get update && apt-get install -y curl libhdf5-dev wget && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 RUN ${PIP} install --global-option=build_ext \
             --global-option=-I/usr/include/hdf5/serial/ \
             --global-option=-L/usr/lib/powerpc64le-linux-gnu/hdf5/serial \
+            --no-cache-dir \
             h5py
 
 # CACHE_STOP is used to rerun future commands, otherwise downloading the .whl will be cached and will not pull the most recent version

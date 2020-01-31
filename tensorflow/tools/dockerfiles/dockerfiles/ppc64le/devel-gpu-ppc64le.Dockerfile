@@ -67,7 +67,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
         && \
     find /usr/local/cuda-${CUDA}/lib64/ -type f -name 'lib*_static.a' -not -name 'libcudart_static.a' -delete && \
-    rm /usr/lib/${LIB_DIR_PREFIX}-linux-gnu/libcudnn_static_v7.a
+    rm /usr/lib/${LIB_DIR_PREFIX}-linux-gnu/libcudnn_static_v7.a && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install TensorRT if not building for PowerPC
 RUN [[ "${ARCH}" = "ppc64le" ]] || { apt-get update && \
@@ -75,6 +78,7 @@ RUN [[ "${ARCH}" = "ppc64le" ]] || { apt-get update && \
         libnvinfer-dev=${LIBNVINFER}+cuda${CUDA} \
         libnvinfer-plugin-dev=${LIBNVINFER}+cuda${CUDA} \
         libnvinfer-plugin${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda${CUDA} \
+        && apt-get autoremove -y \
         && apt-get clean \
         && rm -rf /var/lib/apt/lists/*; }
 
@@ -107,7 +111,10 @@ ENV LANG C.UTF-8
 
 RUN apt-get update && apt-get install -y \
     ${PYTHON} \
-    ${PYTHON}-pip
+    ${PYTHON}-pip && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN ${PIP} --no-cache-dir install --upgrade \
     pip \
@@ -123,7 +130,10 @@ RUN apt-get update && apt-get install -y \
     openjdk-8-jdk \
     ${PYTHON}-dev \
     virtualenv \
-    swig
+    swig && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN ${PIP} --no-cache-dir install \
     Pillow \
