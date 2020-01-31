@@ -92,14 +92,14 @@ $ asm_dockerfiles --help
 $ asm_dockerfiles --release dockerfiles --construct_dockerfiles
 
 # Build all of the "nightly" images on your local machine:
-$ asm_images --release nightly --build_images
+$ asm_images --release nightly --arg _TAG_PREFIX=99.0 --build_images
 
 # Save the list of built images to a file:
-$ asm_images --release nightly --build_images > tf-built.txt
+$ asm_images --release nightly --build_images --arg _TAG_PREFIX=99.0 > tf-built.txt
 
 # Build version release for version 99.0, except "gpu" tags:
 $ asm_images --release versioned --arg _TAG_PREFIX=99.0 --build_images --exclude_tags_matching '.*gpu.*'
 
 # Test your changes to the devel images:
-$ asm_images --release nightly --build_images --run_tests_path=$(realpath tests) --only_tags_matching="^devel-gpu-py3$"
+$ asm_images --release nightly --build_images --arg _TAG_PREFIX=99.0 --run_tests_path=$(realpath tests) --only_tags_matching="^devel-gpu-py3$"
 ```
